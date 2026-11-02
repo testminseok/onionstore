@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>링크 모음</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{--bg:#e9f0ed;--ink:#13201c;--sub:#5a6b65;--card:#ffffff;--line:#cfdcd6;--tag:#ffd84a;--tagink:#3b2f00}
+@media (prefers-color-scheme:dark){:root{--bg:#101a17;--ink:#e8f1ed;--sub:#93a69e;--card:#192622;--line:#2a3b35;--tag:#ffd84a;--tagink:#3b2f00}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  padding:max(28px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom));min-height:100vh}
+main{max-width:520px;margin:0 auto}
+header{text-align:center;margin-bottom:28px}
+.avatar{width:84px;height:84px;border-radius:50%;margin:0 auto 14px;background:var(--ink);color:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+h1{font-size:22px;line-height:1.3;margin:0 0 6px;font-weight:800;letter-spacing:-.02em}
+header p{margin:0;color:var(--sub);font-size:15px}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+a.item{display:flex;align-items:center;gap:14px;background:var(--card);border:1.5px solid var(--line);
+  border-radius:14px;padding:12px 14px;text-decoration:none;color:inherit;min-height:72px;position:relative}
+a.item:hover{border-color:var(--ink)}
+a.item:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.thumb{flex:none;width:56px;height:56px;border-radius:8px;background:var(--line);object-fit:cover}
+.txt{flex:1;min-width:0}
+.t{font-weight:700;font-size:16px;line-height:1.35;overflow-wrap:anywhere}
+.n{color:var(--sub);font-size:13px;margin-top:2px}
+.tag{flex:none;background:var(--tag);color:var(--tagink);font-weight:800;font-size:13px;
+  padding:6px 10px 6px 14px;clip-path:polygon(10px 0,100% 0,100% 100%,10px 100%,0 50%)}
+footer{margin-top:28px;text-align:center;color:var(--sub);font-size:12px;line-height:1.6}
+.empty{text-align:center;color:var(--sub);padding:24px 0}
+@media (prefers-reduced-motion:no-preference){a.item{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="avatar" id="avatar"></div>
+    <h1 id="name"></h1>
+    <p id="bio"></p>
+  </header>
+  <ul id="list"></ul>
+  <footer id="foot"></footer>
+</main>
+<script src="links.js"></script>
+<script>
+(function(){
+  var S = window.SITE || {links:[]};
+  var $ = function(id){return document.getElementById(id)};
+  document.title = S.name || "링크 모음";
+  $("name").textContent = S.name || "";
+  $("bio").textContent = S.bio || "";
+  var av = $("avatar");
+  if (S.avatar) { var im = document.createElement("img"); im.src = S.avatar; im.alt = ""; av.appendChild(im); }
+  else av.textContent = (S.name || "?").trim().charAt(0);
+  var list = $("list");
+  (S.links || []).forEach(function(l){
+    var li = document.createElement("li"), a = document.createElement("a");
+    a.className = "item"; a.href = l.url; a.target = "_blank";
+    a.rel = "noopener noreferrer sponsored nofollow";
+    if (l.image) { var t = document.createElement("img"); t.className = "thumb"; t.src = l.image; t.alt = ""; t.loading = "lazy"; a.appendChild(t); }
+    var box = document.createElement("div"); box.className = "txt";
+    var t1 = document.createElement("div"); t1.className = "t"; t1.textContent = l.title;
+    box.appendChild(t1);
+    if (l.note) { var n = document.createElement("div"); n.className = "n"; n.textContent = l.note; box.appendChild(n); }
+    a.appendChild(box);
+    if (l.price) { var p = document.createElement("span"); p.className = "tag"; p.textContent = l.price; a.appendChild(p); }
+    li.appendChild(a); list.appendChild(li);
+  });
+  if (!list.children.length) { list.outerHTML = '<p class="empty">아직 등록된 링크가 없어요. links.js에 상품을 추가하세요.</p>'; }
+  $("foot").textContent = S.disclosure || "";
+})();
+</script>
+</body>
+</html>
